@@ -119,4 +119,38 @@ public class EventController {
         }
     }
 
+    // FILTER BY TAG
+    @GetMapping("/filter/tag")
+    public ResponseEntity<List<Event>> filterByTag(@RequestParam String tag) {
+        try {
+            return new ResponseEntity<>(eventService.getEventsByTag(tag), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // UPCOMING EVENTS
+    @GetMapping("/upcoming")
+    public ResponseEntity<List<Event>> getUpcoming() {
+        try {
+            return new ResponseEntity<>(eventService.getUpcomingEvents(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // UPDATE PRICE
+    @PatchMapping("/{id}/price")
+    public ResponseEntity<Event> updateEventPrice(
+            @PathVariable UUID id,
+            @RequestParam BigDecimal price) {
+
+        try {
+            return new ResponseEntity<>(eventService.updateEventPrice(id, price), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
